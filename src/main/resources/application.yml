@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: rafa
+  output:
+    ansi:
+      enabled: detect
+  profiles:
+    active: dev
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      write-durations-as-timestamps: true
+  datasource:
+    url: jdbc:h2:~/test
+    username: sa
+    password:
+    dbcp2:
+      driver: org.h2.Driver
+
+server:
+  servlet:
+    context-path: /rafa
+  port: 9000
+
+  logging.file: rafa.log
+  logging:
+    file:
+      max-size: 50MB
+      max-history: 10
+    level:
+      root: info
+      org.springframework: info
+      com.freitech.roger.api.rafa: debug
