@@ -22,14 +22,9 @@ class IndexController {
     @ApiOperation(value ="青葉台のコートの空き状況を照会する")
     fun getAobadai(): ResponseEntity<String> {
         val now: LocalDate = LocalDate.now()
-
         val availableCourt: List<AvailableCourt> = AvailableCourtCheckCommand(ChromeDriver())
                 .checkAobadaiCourt(now.year, now.monthValue, now.dayOfMonth)
-        if(availableCourt.isEmpty()) return ResponseEntity.ok("not found")
-        val mapper = ObjectMapper()
-        val json: String = mapper.writeValueAsString(AvailableCourtResponseModel(availableCourt))
-        System.out.println(json)
-        return ResponseEntity.ok(json)
+        return responseToJson(availableCourt)
     }
 
     @GetMapping("/ref/asaka/benzaiten")
@@ -38,11 +33,7 @@ class IndexController {
         val now: LocalDate = LocalDate.now()
 
         val availableCourt: List<AvailableCourt> = AvailableCourtCheckCommand(ChromeDriver()).checkBenzaitenCourt(now.year, now.monthValue, now.dayOfMonth)
-        if(availableCourt.isEmpty()) return ResponseEntity.ok("not found")
-        val mapper = ObjectMapper()
-        val json: String = mapper.writeValueAsString(AvailableCourtResponseModel(availableCourt))
-        System.out.println(json)
-        return ResponseEntity.ok(json)
+        return responseToJson(availableCourt)
     }
 
     @GetMapping("/ref/asaka/uchimagi")
@@ -51,24 +42,22 @@ class IndexController {
         val now: LocalDate = LocalDate.now()
 
         val availableCourt: List<AvailableCourt> = AvailableCourtCheckCommand(ChromeDriver()).checkUchimagiCourt(now.year, now.monthValue, now.dayOfMonth)
-        if(availableCourt.isEmpty()) return ResponseEntity.ok("not found")
-        val mapper = ObjectMapper()
-        val json: String = mapper.writeValueAsString(AvailableCourtResponseModel(availableCourt))
-        System.out.println(json)
-        return ResponseEntity.ok(json)
+        return responseToJson(availableCourt)
     }
 
     @GetMapping("/ref/asaka/takinone")
     @ApiOperation(value ="滝の根のコートの空き状況を照会する")
     fun getTakinone(): ResponseEntity<String> {
         val now: LocalDate = LocalDate.now()
-
         val availableCourt: List<AvailableCourt> = AvailableCourtCheckCommand(ChromeDriver()).checkTakinoneCourt(now.year, now.monthValue, now.dayOfMonth)
-        if(availableCourt.isEmpty()) return ResponseEntity.ok("not found")
-        val mapper = ObjectMapper()
-        val json: String = mapper.writeValueAsString(AvailableCourtResponseModel(availableCourt))
-        System.out.println(json)
-        return ResponseEntity.ok(json)
+
+        return responseToJson(availableCourt)
     }
 
+    fun responseToJson(availableCourt: List<AvailableCourt>): ResponseEntity<String> {
+        if(availableCourt.isEmpty()) return ResponseEntity.ok("not found")
+        val json: String = ObjectMapper().writeValueAsString(AvailableCourtResponseModel(availableCourt))
+        return ResponseEntity.ok(json)
+
+    }
 }
